@@ -10,7 +10,7 @@ public class InvincibleConquestModConfig {
 	static {
 		ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 		builder.push("random_power");
-		ENABLE_RANDOM_SELECTION = builder.define("enable_random_selection", false);
+		ENABLE_RANDOM_SELECTION = builder.define("enable_random_selection", true);
 		FORCE_RANDOM_SELECTION = builder.define("force_random_selection", false);
 		builder.pop();
 		SPEC = builder.build();
