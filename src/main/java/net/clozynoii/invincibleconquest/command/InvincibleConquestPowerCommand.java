@@ -8,6 +8,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,8 +19,10 @@ import net.clozynoii.invincibleconquest.procedures.AbilitySelectionHelper;
 public class InvincibleConquestPowerCommand {
 	@SubscribeEvent
 	public static void registerCommand(RegisterCommandsEvent event) {
-		event.getDispatcher().register(Commands.literal("invincibleconquest").requires(s -> s.hasPermission(2)).then(Commands.literal("power")
-				.then(Commands.literal("set").then(Commands.argument("target", EntityArgument.player()).then(Commands.argument("power", StringArgumentType.greedyString()).executes(ctx -> {
+		event.getDispatcher().register(Commands.literal("invincibleconquest").then(Commands.literal("admin").requires(s -> s.hasPermission(2)).then(Commands.literal("power")
+				.then(Commands.literal("set").then(Commands.argument("target", EntityArgument.player()).then(Commands.argument("power", StringArgumentType.word()).suggests((ctx, builder) -> {
+					return SharedSuggestionProvider.suggest(AbilitySelectionHelper.getAvailablePowers().stream().map(String::toLowerCase).toList(), builder);
+				}).suggests((ctx, builder) -> SharedSuggestionProvider.suggest(new String[] {"random"}, builder)).executes(ctx -> {
 					ServerPlayer target;
 					try {
 						target = EntityArgument.getPlayer(ctx, "target");
@@ -27,8 +30,20 @@ public class InvincibleConquestPowerCommand {
 						return 0;
 					}
 					String ability = StringArgumentType.getString(ctx, "power");
+					if ("random".equalsIgnoreCase(ability)) {
+						if (!AbilitySelectionHelper.assignRandomPower(target, target.getRandom())) {
+							ctx.getSource().sendFailure(Component.literal("No available powers found for random selection."));
+							return 0;
+						}
+						ctx.getSource().sendSuccess(() -> Component.literal("Randomized power for " + target.getScoreboardName()), true);
+						return 1;
+					}
+					if (AbilitySelectionHelper.isPowerDisabled(ability)) {
+						ctx.getSource().sendFailure(Component.literal("Power is disabled/WIP and cannot be assigned: " + ability));
+						return 0;
+					}
 					if (!AbilitySelectionHelper.assignAbility(target, ability)) {
-						ctx.getSource().sendFailure(Component.literal("Invalid/disabled/WIP power: " + ability));
+						ctx.getSource().sendFailure(Component.literal("Unknown or unavailable power: " + ability));
 						return 0;
 					}
 					target.displayClientMessage(Component.literal("Your power was set to " + ability + " by an admin."), false);
@@ -42,11 +57,11 @@ public class InvincibleConquestPowerCommand {
 						return 0;
 					}
 					if (!AbilitySelectionHelper.assignRandomPower(target, target.getRandom())) {
-						ctx.getSource().sendFailure(Component.literal("No valid random powers are available."));
+						ctx.getSource().sendFailure(Component.literal("No available powers found for random selection."));
 						return 0;
 					}
 					ctx.getSource().sendSuccess(() -> Component.literal("Randomized power for " + target.getScoreboardName()), true);
 					return 1;
-				})))));
+				}))))));
 	}
 }
