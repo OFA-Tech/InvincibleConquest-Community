@@ -137,6 +137,10 @@ public class MenuAbilitySelectionScreen extends AbstractContainerScreen<MenuAbil
 		super.init();
 		imagebutton_icon_question = new ImageButton(this.leftPos + -75, this.topPos + -44, 16, 16,
 				new WidgetSprites(ResourceLocation.parse("invincible_conquest:textures/screens/icon_question.png"), ResourceLocation.parse("invincible_conquest:textures/screens/icon_question.png")), e -> {
+					if (true) {
+						PacketDistributor.sendToServer(new MenuAbilitySelectionButtonMessage(0, x, y, z));
+						MenuAbilitySelectionButtonMessage.handleButtonAction(entity, 0, x, y, z);
+					}
 				}) {
 			@Override
 			public void renderWidget(GuiGraphics guiGraphics, int x, int y, float partialTicks) {

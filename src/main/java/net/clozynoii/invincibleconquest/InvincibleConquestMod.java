@@ -10,6 +10,8 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.fml.util.thread.SidedThreadGroups;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.IEventBus;
 
@@ -27,6 +29,7 @@ import net.clozynoii.invincibleconquest.init.InvincibleConquestModMenus;
 import net.clozynoii.invincibleconquest.init.InvincibleConquestModItems;
 import net.clozynoii.invincibleconquest.init.InvincibleConquestModEntities;
 import net.clozynoii.invincibleconquest.init.InvincibleConquestModBlocks;
+import net.clozynoii.invincibleconquest.init.InvincibleConquestModConfig;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.Map;
@@ -40,10 +43,11 @@ public class InvincibleConquestMod {
 	public static final Logger LOGGER = LogManager.getLogger(InvincibleConquestMod.class);
 	public static final String MODID = "invincible_conquest";
 
-	public InvincibleConquestMod(IEventBus modEventBus) {
+	public InvincibleConquestMod(IEventBus modEventBus, ModContainer modContainer) {
 		// Start of user code block mod constructor
 		// End of user code block mod constructor
 		NeoForge.EVENT_BUS.register(this);
+		modContainer.registerConfig(ModConfig.Type.COMMON, InvincibleConquestModConfig.SPEC);
 		modEventBus.addListener(this::registerNetworking);
 		InvincibleConquestModSounds.REGISTRY.register(modEventBus);
 		InvincibleConquestModBlocks.REGISTRY.register(modEventBus);

@@ -29,6 +29,8 @@ import net.clozynoii.invincibleconquest.procedures.SelectAbilityCloningProcedure
 import net.clozynoii.invincibleconquest.procedures.SelectAbilityBeastProcedure;
 import net.clozynoii.invincibleconquest.procedures.SelectAbilityAtomProcedure;
 import net.clozynoii.invincibleconquest.InvincibleConquestMod;
+import net.clozynoii.invincibleconquest.procedures.AbilitySelectionHelper;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;
 
@@ -69,6 +71,15 @@ public record MenuAbilitySelectionButtonMessage(int buttonID, int x, int y, int 
 		// security measure to prevent arbitrary chunk generation
 		if (!world.hasChunkAt(new BlockPos(x, y, z)))
 			return;
+		if (entity instanceof ServerPlayer serverPlayer && buttonID == 0) {
+			if (!AbilitySelectionHelper.isRandomSelectionAllowed(entity)) {
+				serverPlayer.displayClientMessage(Component.literal("Random selection is disabled."), false);
+				return;
+			}
+			if (!AbilitySelectionHelper.assignRandomPower(serverPlayer, serverPlayer.getRandom())) {
+				return;
+			}
+		}
 		if (buttonID == 1) {
 
 			SelectAbilityHumanProcedure.execute(world, x, y, z, entity);

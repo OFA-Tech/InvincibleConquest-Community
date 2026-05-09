@@ -18,6 +18,7 @@ import net.minecraft.core.BlockPos;
 
 import net.clozynoii.invincibleconquest.world.inventory.MenuAbilitySelectionMenu;
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
+import net.clozynoii.invincibleconquest.procedures.AbilitySelectionHelper;
 import net.clozynoii.invincibleconquest.init.InvincibleConquestModGameRules;
 
 import javax.annotation.Nullable;
@@ -59,6 +60,12 @@ public class PlayerJoinProcedure {
 				_player.displayClientMessage(Component.literal("\u00A7l3. \u00A7rThis update will follow up with 5.1, a bugfix for both of these issues, enjoy!"), false);
 		}
 		if ((entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("None")) {
+			if (entity instanceof ServerPlayer _serverPlayer && AbilitySelectionHelper.isForceRandomSelection(entity)) {
+				if (AbilitySelectionHelper.assignRandomPower(_serverPlayer, _serverPlayer.getRandom())) {
+					_serverPlayer.displayClientMessage(Component.literal("Random power selection is forced on this server/world."), false);
+					return;
+				}
+			}
 			if (entity instanceof ServerPlayer _ent) {
 				BlockPos _bpos = BlockPos.containing(x, y, z);
 				_ent.openMenu(new MenuProvider() {
