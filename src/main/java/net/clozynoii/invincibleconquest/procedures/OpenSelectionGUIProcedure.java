@@ -23,6 +23,12 @@ public class OpenSelectionGUIProcedure {
 		if (entity == null)
 			return;
 		if (entity instanceof ServerPlayer _ent) {
+			if (AbilitySelectionHelper.isForceRandomSelection(entity) && (entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("None")) {
+				if (AbilitySelectionHelper.assignRandomPower(_ent, _ent.getRandom())) {
+					_ent.displayClientMessage(Component.literal("Random power selection is forced on this server/world."), false);
+				}
+				return;
+			}
 			BlockPos _bpos = BlockPos.containing(x, y, z);
 			_ent.openMenu(new MenuProvider() {
 				@Override
