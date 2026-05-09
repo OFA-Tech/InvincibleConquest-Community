@@ -1,5 +1,6 @@
 package net.clozynoii.invincibleconquest.procedures;
 
+import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.item.ItemStack;
