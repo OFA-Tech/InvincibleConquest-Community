@@ -11,23 +11,48 @@ import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Locale;
 
 public class AbilitySelectionHelper {
 	private static final List<String> MENU_ABILITIES = Arrays.asList("Human", "Viltrumite", "Speedster", "Spider", "Cloning", "Explode", "Portal", "Battle Beast", "Atom Eve", "Robot", "Tech Jacket");
 	private static final Set<String> DISABLED_POWER_IDS = Set.of("speedster", "cloning", "atom", "robot");
+	private static final Map<String, String> COMMAND_POWER_TO_DISPLAY = new HashMap<>();
+
+	static {
+		for (String ability : MENU_ABILITIES) {
+			COMMAND_POWER_TO_DISPLAY.put(normalizePowerId(ability), ability);
+		}
+		COMMAND_POWER_TO_DISPLAY.put("theimmortal", "The Immortal");
+	}
 
 	private static String normalizePowerId(String ability) {
 		if (ability == null) {
 			return "";
 		}
-		String normalized = ability.trim().toLowerCase(Locale.ROOT);
-		if (normalized.equals("atom eve")) {
+		String normalized = ability.trim().toLowerCase(Locale.ROOT).replace(" ", "");
+		normalized = normalized.replace("_", "");
+		if (normalized.equals("atomeve")) {
 			return "atom";
 		}
 		return normalized;
+	}
+
+	public static String resolvePowerDisplayName(String powerInput) {
+		return COMMAND_POWER_TO_DISPLAY.get(normalizePowerId(powerInput));
+	}
+
+	public static List<String> getAvailablePowerCommandIds() {
+		List<String> available = new ArrayList<>();
+		for (Map.Entry<String, String> entry : COMMAND_POWER_TO_DISPLAY.entrySet()) {
+			if (isPowerAvailable(entry.getValue())) {
+				available.add(entry.getKey());
+			}
+		}
+		return available.stream().distinct().sorted().toList();
 	}
 
 	public static boolean isPowerDisabled(String ability) {
@@ -37,6 +62,10 @@ public class AbilitySelectionHelper {
 	public static boolean isPowerAvailable(String ability) {
 		if (ability == null || ability.isBlank()) {
 			return false;
+		}
+		String resolvedDisplay = resolvePowerDisplayName(ability);
+		if (resolvedDisplay != null) {
+			ability = resolvedDisplay;
 		}
 		for (String menuAbility : MENU_ABILITIES) {
 			if (menuAbility.equalsIgnoreCase(ability)) {
@@ -81,7 +110,13 @@ public class AbilitySelectionHelper {
 	}
 
 	public static boolean assignAbility(ServerPlayer player, String ability) {
-		if (player == null || !isPowerAvailable(ability))
+		if (player == null)
+			return false;
+		String resolvedDisplay = resolvePowerDisplayName(ability);
+		if (resolvedDisplay != null) {
+			ability = resolvedDisplay;
+		}
+		if (!isPowerAvailable(ability))
 			return false;
 		String resolvedAbility = getAvailablePowers().stream().filter(power -> power.equalsIgnoreCase(ability)).findFirst().orElse(ability);
 		InvincibleConquestModVariables.PlayerVariables vars = player.getData(InvincibleConquestModVariables.PLAYER_VARIABLES);
