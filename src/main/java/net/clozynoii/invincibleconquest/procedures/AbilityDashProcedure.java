@@ -12,13 +12,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.CommandSource;
-import net.minecraft.client.Minecraft;
 
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 import net.clozynoii.invincibleconquest.init.InvincibleConquestModMobEffects;
 import net.clozynoii.invincibleconquest.init.InvincibleConquestModGameRules;
-
-import com.mojang.blaze3d.platform.InputConstants;
 
 public class AbilityDashProcedure {
 	public static void execute(LevelAccessor world, double x, double y, double z, Entity entity) {
@@ -137,7 +134,13 @@ public class AbilityDashProcedure {
 						("playsound invincible_conquest:whoosh player " + "@a" + " ~ ~ ~ 1 1"));
 			if (world instanceof ServerLevel _level)
 				_level.sendParticles(ParticleTypes.CLOUD, x, (y + 1), z, 20, 0.5, 0.5, 0.5, 0.1);
-			if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), InputConstants.KEY_W)) {
+			double forward = 0;
+			double strafe = 0;
+			if (entity instanceof Player _player) {
+				forward = _player.zza;
+				strafe = _player.xxa;
+			}
+			if (Math.abs(forward) >= Math.abs(strafe) && forward > 0) {
 				magnitude = Math.sqrt(entity.getLookAngle().x * entity.getLookAngle().x + entity.getLookAngle().y * entity.getLookAngle().y + entity.getLookAngle().z * entity.getLookAngle().z);
 				vecX = entity.getLookAngle().x / magnitude;
 				vecZ = entity.getLookAngle().z / magnitude;
@@ -150,7 +153,7 @@ public class AbilityDashProcedure {
 					vecY = vecY * 0.75;
 				}
 				entity.push(vecX, vecY, vecZ);
-			} else if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), InputConstants.KEY_S)) {
+			} else if (Math.abs(forward) >= Math.abs(strafe) && forward < 0) {
 				magnitude = Math.sqrt(entity.getLookAngle().x * entity.getLookAngle().x + entity.getLookAngle().y * entity.getLookAngle().y + entity.getLookAngle().z * entity.getLookAngle().z);
 				vecX = entity.getLookAngle().x / magnitude;
 				vecZ = entity.getLookAngle().z / magnitude;
@@ -158,7 +161,7 @@ public class AbilityDashProcedure {
 				vecZ = vecZ * (-1);
 				vecY = 0.25;
 				entity.push(vecX, vecY, vecZ);
-			} else if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), InputConstants.KEY_A)) {
+			} else if (Math.abs(strafe) > Math.abs(forward) && strafe < 0) {
 				magnitude = Math.sqrt(entity.getLookAngle().x * entity.getLookAngle().x + entity.getLookAngle().y * entity.getLookAngle().y + entity.getLookAngle().z * entity.getLookAngle().z);
 				vecX = entity.getLookAngle().x / magnitude;
 				vecZ = entity.getLookAngle().z / magnitude;
@@ -166,7 +169,7 @@ public class AbilityDashProcedure {
 				vecZ = vecZ * 1;
 				vecY = 0.25;
 				entity.push(vecZ, vecY, vecX);
-			} else if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), InputConstants.KEY_D)) {
+			} else if (Math.abs(strafe) > Math.abs(forward) && strafe > 0) {
 				magnitude = Math.sqrt(entity.getLookAngle().x * entity.getLookAngle().x + entity.getLookAngle().y * entity.getLookAngle().y + entity.getLookAngle().z * entity.getLookAngle().z);
 				vecX = entity.getLookAngle().x / magnitude;
 				vecZ = entity.getLookAngle().z / magnitude;

@@ -1,7 +1,5 @@
 package net.clozynoii.invincibleconquest.procedures;
 
-import org.checkerframework.checker.units.qual.s;
-
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
-import net.minecraft.client.gui.components.EditBox;
 
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 import net.clozynoii.invincibleconquest.init.InvincibleConquestModEntities;
@@ -34,7 +31,7 @@ public class PurchaseTheHammerProcedure {
 					}
 					return 0;
 				}
-			}.convert(guistate.containsKey("text:Power") ? ((EditBox) guistate.get("text:Power")).getValue() : "") == 1) {
+			}.convert(getText(guistate, "text:Power")) == 1) {
 				if (world instanceof ServerLevel _level) {
 					Entity entityToSpawn = InvincibleConquestModEntities.HAMMER_SPAWNER.get().spawn(_level, BlockPos.containing(new Object() {
 						double convert(String s) {
@@ -44,23 +41,23 @@ public class PurchaseTheHammerProcedure {
 							}
 							return 0;
 						}
-					}.convert(guistate.containsKey("text:XValue") ? ((EditBox) guistate.get("text:XValue")).getValue() : ""), new Object() {
+					}.convert(getText(guistate, "text:XValue")), new Object() {
 						double convert(String s) {
 							try {
 								return Double.parseDouble(s.trim());
 							} catch (Exception e) {
 							}
-							return 0;
+						 return 0;
 						}
-					}.convert(guistate.containsKey("text:YValue") ? ((EditBox) guistate.get("text:YValue")).getValue() : ""), new Object() {
+					}.convert(getText(guistate, "text:YValue")), new Object() {
 						double convert(String s) {
 							try {
 								return Double.parseDouble(s.trim());
 							} catch (Exception e) {
 							}
-							return 0;
+						 return 0;
 						}
-					}.convert(guistate.containsKey("text:ZValue") ? ((EditBox) guistate.get("text:ZValue")).getValue() : "")), MobSpawnType.MOB_SUMMONED);
+					}.convert(getText(guistate, "text:ZValue"))), MobSpawnType.MOB_SUMMONED);
 					if (entityToSpawn != null) {
 					}
 				}
@@ -70,9 +67,9 @@ public class PurchaseTheHammerProcedure {
 						return Double.parseDouble(s.trim());
 					} catch (Exception e) {
 					}
-					return 0;
+				 return 0;
 				}
-			}.convert(guistate.containsKey("text:Power") ? ((EditBox) guistate.get("text:Power")).getValue() : "") == 2) {
+			}.convert(getText(guistate, "text:Power")) == 2) {
 				if (world instanceof ServerLevel _level) {
 					Entity entityToSpawn = InvincibleConquestModEntities.HAMMER_SPAWNER_2.get().spawn(_level, BlockPos.containing(new Object() {
 						double convert(String s) {
@@ -80,25 +77,25 @@ public class PurchaseTheHammerProcedure {
 								return Double.parseDouble(s.trim());
 							} catch (Exception e) {
 							}
-							return 0;
+						 return 0;
 						}
-					}.convert(guistate.containsKey("text:XValue") ? ((EditBox) guistate.get("text:XValue")).getValue() : ""), new Object() {
+					}.convert(getText(guistate, "text:XValue")), new Object() {
 						double convert(String s) {
 							try {
 								return Double.parseDouble(s.trim());
 							} catch (Exception e) {
 							}
-							return 0;
+						 return 0;
 						}
-					}.convert(guistate.containsKey("text:YValue") ? ((EditBox) guistate.get("text:YValue")).getValue() : ""), new Object() {
+					}.convert(getText(guistate, "text:YValue")), new Object() {
 						double convert(String s) {
 							try {
 								return Double.parseDouble(s.trim());
 							} catch (Exception e) {
 							}
-							return 0;
+						 return 0;
 						}
-					}.convert(guistate.containsKey("text:ZValue") ? ((EditBox) guistate.get("text:ZValue")).getValue() : "")), MobSpawnType.MOB_SUMMONED);
+					}.convert(getText(guistate, "text:ZValue"))), MobSpawnType.MOB_SUMMONED);
 					if (entityToSpawn != null) {
 					}
 				}
@@ -108,9 +105,9 @@ public class PurchaseTheHammerProcedure {
 						return Double.parseDouble(s.trim());
 					} catch (Exception e) {
 					}
-					return 0;
+				 return 0;
 				}
-			}.convert(guistate.containsKey("text:Power") ? ((EditBox) guistate.get("text:Power")).getValue() : "") == 3) {
+			}.convert(getText(guistate, "text:Power")) == 3) {
 				if (world instanceof ServerLevel _level) {
 					Entity entityToSpawn = InvincibleConquestModEntities.HAMMER_SPAWNER_3.get().spawn(_level, BlockPos.containing(new Object() {
 						double convert(String s) {
@@ -118,25 +115,25 @@ public class PurchaseTheHammerProcedure {
 								return Double.parseDouble(s.trim());
 							} catch (Exception e) {
 							}
-							return 0;
+						 return 0;
 						}
-					}.convert(guistate.containsKey("text:XValue") ? ((EditBox) guistate.get("text:XValue")).getValue() : ""), new Object() {
+					}.convert(getText(guistate, "text:XValue")), new Object() {
 						double convert(String s) {
 							try {
 								return Double.parseDouble(s.trim());
 							} catch (Exception e) {
 							}
-							return 0;
+						 return 0;
 						}
-					}.convert(guistate.containsKey("text:YValue") ? ((EditBox) guistate.get("text:YValue")).getValue() : ""), new Object() {
+					}.convert(getText(guistate, "text:YValue")), new Object() {
 						double convert(String s) {
 							try {
 								return Double.parseDouble(s.trim());
 							} catch (Exception e) {
 							}
-							return 0;
+						 return 0;
 						}
-					}.convert(guistate.containsKey("text:ZValue") ? ((EditBox) guistate.get("text:ZValue")).getValue() : "")), MobSpawnType.MOB_SUMMONED);
+					}.convert(getText(guistate, "text:ZValue"))), MobSpawnType.MOB_SUMMONED);
 					if (entityToSpawn != null) {
 					}
 				}
@@ -175,6 +172,20 @@ public class PurchaseTheHammerProcedure {
 					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.experience_orb.pickup")), SoundSource.NEUTRAL, 1, (float) 0.1, false);
 				}
 			}
+		}
+	}
+
+	private static String getText(HashMap guistate, String key) {
+		Object value = guistate.get(key);
+		if (value == null) {
+			return "";
+		}
+		try {
+			java.lang.reflect.Method method = value.getClass().getMethod("getValue");
+			Object result = method.invoke(value);
+			return result != null ? result.toString() : "";
+		} catch (Exception e) {
+			return value.toString();
 		}
 	}
 }

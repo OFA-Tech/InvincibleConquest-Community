@@ -1,15 +1,13 @@
 package net.clozynoii.invincibleconquest.procedures;
 
-import org.lwjgl.glfw.GLFW;
-
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.Event;
 
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.client.Minecraft;
 
 import net.clozynoii.invincibleconquest.entity.SpaceshipEntity;
 
@@ -32,10 +30,14 @@ public class DriveSpaceshipProcedure {
 		if (entity.isPassenger()) {
 			if ((entity.getVehicle()) instanceof SpaceshipEntity) {
 				if (((entity.getVehicle()) instanceof SpaceshipEntity _datEntI ? _datEntI.getEntityData().get(SpaceshipEntity.DATA_Fuel) : 0) > 0) {
-					if (GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_SPACE) == GLFW.GLFW_PRESS) {
+					double forward = 0;
+					if (entity instanceof Player _player) {
+						forward = _player.zza;
+					}
+					if (forward > 0) {
 						(entity.getVehicle()).setDeltaMovement(new Vec3(((entity.getVehicle()).getDeltaMovement().x()), ((entity.getVehicle()).getDeltaMovement().y() + 0.2), ((entity.getVehicle()).getDeltaMovement().z())));
 					}
-					if (GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_CONTROL) == GLFW.GLFW_PRESS) {
+					if (entity.isShiftKeyDown()) {
 						(entity.getVehicle()).setDeltaMovement(new Vec3(((entity.getVehicle()).getDeltaMovement().x()), ((entity.getVehicle()).getDeltaMovement().y() - 0.2), ((entity.getVehicle()).getDeltaMovement().z())));
 					}
 				}

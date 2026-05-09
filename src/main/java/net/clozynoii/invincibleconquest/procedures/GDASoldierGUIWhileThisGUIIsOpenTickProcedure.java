@@ -1,9 +1,6 @@
 package net.clozynoii.invincibleconquest.procedures;
 
-import org.checkerframework.checker.units.qual.s;
-
 import net.minecraft.world.entity.Entity;
-import net.minecraft.client.gui.components.EditBox;
 
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 
@@ -23,7 +20,7 @@ public class GDASoldierGUIWhileThisGUIIsOpenTickProcedure {
 					}
 					return 0;
 				}
-			}.convert(guistate.containsKey("text:gdasoldieramount") ? ((EditBox) guistate.get("text:gdasoldieramount")).getValue() : "") * 150;
+			}.convert(getText(guistate, "text:gdasoldieramount")) * 150;
 			_vars.syncPlayerVariables(entity);
 		}
 		if (new Object() {
@@ -34,9 +31,29 @@ public class GDASoldierGUIWhileThisGUIIsOpenTickProcedure {
 				}
 				return 0;
 			}
-		}.convert(guistate.containsKey("text:gdasoldieramount") ? ((EditBox) guistate.get("text:gdasoldieramount")).getValue() : "") > 100) {
-			if (guistate.get("text:gdasoldieramount") instanceof EditBox _tf)
-				_tf.setValue("100");
+		}.convert(getText(guistate, "text:gdasoldieramount")) > 100) {
+			Object field = guistate.get("text:gdasoldieramount");
+			if (field != null) {
+				try {
+					java.lang.reflect.Method method = field.getClass().getMethod("setValue", String.class);
+					method.invoke(field, "100");
+				} catch (Exception e) {
+				}
+			}
+		}
+	}
+
+	private static String getText(HashMap guistate, String key) {
+		Object value = guistate.get(key);
+		if (value == null) {
+			return "";
+		}
+		try {
+			java.lang.reflect.Method method = value.getClass().getMethod("getValue");
+			Object result = method.invoke(value);
+			return result != null ? result.toString() : "";
+		} catch (Exception e) {
+			return value.toString();
 		}
 	}
 }

@@ -1,7 +1,5 @@
 package net.clozynoii.invincibleconquest.procedures;
 
-import org.checkerframework.checker.units.qual.s;
-
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.client.gui.components.EditBox;
 
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 
@@ -43,7 +40,7 @@ public class PurchaseTeleportProcedure {
 						}
 						return 0;
 					}
-				}.convert(guistate.containsKey("text:XValue") ? ((EditBox) guistate.get("text:XValue")).getValue() : ""), new Object() {
+				}.convert(getText(guistate, "text:XValue")), new Object() {
 					double convert(String s) {
 						try {
 							return Double.parseDouble(s.trim());
@@ -51,7 +48,7 @@ public class PurchaseTeleportProcedure {
 						}
 						return 0;
 					}
-				}.convert(guistate.containsKey("text:YValue") ? ((EditBox) guistate.get("text:YValue")).getValue() : ""), new Object() {
+				}.convert(getText(guistate, "text:YValue")), new Object() {
 					double convert(String s) {
 						try {
 							return Double.parseDouble(s.trim());
@@ -59,7 +56,7 @@ public class PurchaseTeleportProcedure {
 						}
 						return 0;
 					}
-				}.convert(guistate.containsKey("text:ZValue") ? ((EditBox) guistate.get("text:ZValue")).getValue() : ""));
+				}.convert(getText(guistate, "text:ZValue")));
 				if (_ent instanceof ServerPlayer _serverPlayer)
 					_serverPlayer.connection.teleport(new Object() {
 						double convert(String s) {
@@ -69,7 +66,7 @@ public class PurchaseTeleportProcedure {
 							}
 							return 0;
 						}
-					}.convert(guistate.containsKey("text:XValue") ? ((EditBox) guistate.get("text:XValue")).getValue() : ""), new Object() {
+					}.convert(getText(guistate, "text:XValue")), new Object() {
 						double convert(String s) {
 							try {
 								return Double.parseDouble(s.trim());
@@ -77,7 +74,7 @@ public class PurchaseTeleportProcedure {
 							}
 							return 0;
 						}
-					}.convert(guistate.containsKey("text:YValue") ? ((EditBox) guistate.get("text:YValue")).getValue() : ""), new Object() {
+					}.convert(getText(guistate, "text:YValue")), new Object() {
 						double convert(String s) {
 							try {
 								return Double.parseDouble(s.trim());
@@ -85,7 +82,7 @@ public class PurchaseTeleportProcedure {
 							}
 							return 0;
 						}
-					}.convert(guistate.containsKey("text:ZValue") ? ((EditBox) guistate.get("text:ZValue")).getValue() : ""), _ent.getYRot(), _ent.getXRot());
+					}.convert(getText(guistate, "text:ZValue")), _ent.getYRot(), _ent.getXRot());
 			}
 			if (world instanceof ServerLevel _level)
 				_level.sendParticles(ParticleTypes.FIREWORK, x, (y + 1), z, 5, 0.1, 0.1, 0.1, 0.3);
@@ -123,6 +120,20 @@ public class PurchaseTeleportProcedure {
 					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.experience_orb.pickup")), SoundSource.NEUTRAL, 1, (float) 0.1, false);
 				}
 			}
+		}
+	}
+
+	private static String getText(HashMap guistate, String key) {
+		Object value = guistate.get(key);
+		if (value == null) {
+			return "";
+		}
+		try {
+			java.lang.reflect.Method method = value.getClass().getMethod("getValue");
+			Object result = method.invoke(value);
+			return result != null ? result.toString() : "";
+		} catch (Exception e) {
+			return value.toString();
 		}
 	}
 }

@@ -1,7 +1,5 @@
 package net.clozynoii.invincibleconquest.procedures;
 
-import org.checkerframework.checker.units.qual.s;
-
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.LevelAccessor;
@@ -16,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
-import net.minecraft.client.gui.components.EditBox;
 
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 import net.clozynoii.invincibleconquest.init.InvincibleConquestModEntities;
@@ -51,12 +48,12 @@ public class PurchaseJetProcedure {
 					_datEntSetI.getEntityData().set(FighterJetEntity.DATA_XTarget, (int) new Object() {
 						double convert(String s) {
 							try {
-								return Double.parseDouble(s.trim());
-							} catch (Exception e) {
-							}
-							return 0;
-						}
-					}.convert(guistate.containsKey("text:XValue") ? ((EditBox) guistate.get("text:XValue")).getValue() : ""));
+ 								return Double.parseDouble(s.trim());
+ 							} catch (Exception e) {
+ 							}
+ 							return 0;
+ 						}
+					}.convert(getText(guistate, "text:XValue")));
 				if (((Entity) world.getEntitiesOfClass(FighterJetEntity.class, AABB.ofSize(new Vec3(x, y, z), 1500, 1500, 1500), e -> true).stream().sorted(new Object() {
 					Comparator<Entity> compareDistOf(double _x, double _y, double _z) {
 						return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
@@ -65,12 +62,12 @@ public class PurchaseJetProcedure {
 					_datEntSetI.getEntityData().set(FighterJetEntity.DATA_ZTarget, (int) new Object() {
 						double convert(String s) {
 							try {
-								return Double.parseDouble(s.trim());
-							} catch (Exception e) {
-							}
-							return 0;
-						}
-					}.convert(guistate.containsKey("text:ZValue") ? ((EditBox) guistate.get("text:ZValue")).getValue() : ""));
+ 								return Double.parseDouble(s.trim());
+ 							} catch (Exception e) {
+ 							}
+ 						 return 0;
+ 						}
+					}.convert(getText(guistate, "text:ZValue")));
 			}
 			if (entity instanceof Player _player)
 				_player.closeContainer();
@@ -106,6 +103,20 @@ public class PurchaseJetProcedure {
 					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.experience_orb.pickup")), SoundSource.NEUTRAL, 1, (float) 0.1, false);
 				}
 			}
+		}
+	}
+
+	private static String getText(HashMap guistate, String key) {
+		Object value = guistate.get(key);
+		if (value == null) {
+			return "";
+		}
+		try {
+			java.lang.reflect.Method method = value.getClass().getMethod("getValue");
+			Object result = method.invoke(value);
+			return result != null ? result.toString() : "";
+		} catch (Exception e) {
+			return value.toString();
 		}
 	}
 }

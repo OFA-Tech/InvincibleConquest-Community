@@ -1,9 +1,6 @@
 package net.clozynoii.invincibleconquest.procedures;
 
-import org.checkerframework.checker.units.qual.s;
-
 import net.minecraft.world.entity.Entity;
-import net.minecraft.client.gui.components.EditBox;
 
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 
@@ -23,7 +20,7 @@ public class TheHammerGUIOpenProcedure {
 					}
 					return 0;
 				}
-			}.convert(guistate.containsKey("text:Power") ? ((EditBox) guistate.get("text:Power")).getValue() : "") * 1000;
+			}.convert(getText(guistate, "text:Power")) * 1000;
 			_vars.syncPlayerVariables(entity);
 		}
 		if (new Object() {
@@ -34,9 +31,29 @@ public class TheHammerGUIOpenProcedure {
 				}
 				return 0;
 			}
-		}.convert(guistate.containsKey("text:Power") ? ((EditBox) guistate.get("text:Power")).getValue() : "") > 3) {
-			if (guistate.get("text:Power") instanceof EditBox _tf)
-				_tf.setValue("3");
+		}.convert(getText(guistate, "text:Power")) > 3) {
+			Object field = guistate.get("text:Power");
+			if (field != null) {
+				try {
+					java.lang.reflect.Method method = field.getClass().getMethod("setValue", String.class);
+					method.invoke(field, "3");
+				} catch (Exception e) {
+				}
+			}
+		}
+	}
+
+	private static String getText(HashMap guistate, String key) {
+		Object value = guistate.get(key);
+		if (value == null) {
+			return "";
+		}
+		try {
+			java.lang.reflect.Method method = value.getClass().getMethod("getValue");
+			Object result = method.invoke(value);
+			return result != null ? result.toString() : "";
+		} catch (Exception e) {
+			return value.toString();
 		}
 	}
 }

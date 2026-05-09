@@ -32,9 +32,6 @@ public class KeybindFlightProcedure {
 					_vars.FlightDirection = "";
 					_vars.syncPlayerVariables(entity);
 				}
-				if (world.isClientSide()) {
-					SetupAnimationsProcedure.setAnimationClientside((Player) entity, "", false);
-				}
 				if (!world.isClientSide()) {
 					if (entity instanceof Player)
 						PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage("", entity.getId(), false));

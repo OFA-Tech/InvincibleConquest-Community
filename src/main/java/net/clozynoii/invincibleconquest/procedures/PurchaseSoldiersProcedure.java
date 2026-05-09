@@ -1,7 +1,5 @@
 package net.clozynoii.invincibleconquest.procedures;
 
-import org.checkerframework.checker.units.qual.s;
-
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.LevelAccessor;
@@ -16,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.BlockPos;
-import net.minecraft.client.gui.components.EditBox;
 
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 import net.clozynoii.invincibleconquest.init.InvincibleConquestModEntities;
@@ -67,7 +64,7 @@ public class PurchaseSoldiersProcedure {
 					}
 					return 0;
 				}
-			}.convert(guistate.containsKey("text:gdasoldieramount") ? ((EditBox) guistate.get("text:gdasoldieramount")).getValue() : ""); index0++) {
+			}.convert(getText(guistate, "text:gdasoldieramount")); index0++) {
 				if (!(entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).SoldierType).equals("Stealth Soldiers")) {
 					if (world instanceof ServerLevel _level) {
 						Entity entityToSpawn = InvincibleConquestModEntities.GDA_SOLDIER.get().spawn(_level, BlockPos.containing(x, y, z), MobSpawnType.MOB_SUMMONED);
@@ -115,6 +112,20 @@ public class PurchaseSoldiersProcedure {
 					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.experience_orb.pickup")), SoundSource.NEUTRAL, 1, (float) 0.1, false);
 				}
 			}
+		}
+	}
+
+	private static String getText(HashMap guistate, String key) {
+		Object value = guistate.get(key);
+		if (value == null) {
+			return "";
+		}
+		try {
+			java.lang.reflect.Method method = value.getClass().getMethod("getValue");
+			Object result = method.invoke(value);
+			return result != null ? result.toString() : "";
+		} catch (Exception e) {
+			return value.toString();
 		}
 	}
 }

@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.client.Minecraft;
 
 import net.clozynoii.invincibleconquest.world.inventory.MenuAbilitySelectionMenu;
 import net.clozynoii.invincibleconquest.init.InvincibleConquestModItems;
@@ -43,15 +42,13 @@ public class OpenSelectionGUIProcedure {
 			}, _bpos);
 		}
 		if (!(new Object() {
-			public boolean checkGamemode(Entity _ent) {
-				if (_ent instanceof ServerPlayer _serverPlayer) {
-					return _serverPlayer.gameMode.getGameModeForPlayer() == GameType.CREATIVE;
-				} else if (_ent.level().isClientSide() && _ent instanceof Player _player) {
-					return Minecraft.getInstance().getConnection().getPlayerInfo(_player.getGameProfile().getId()) != null && Minecraft.getInstance().getConnection().getPlayerInfo(_player.getGameProfile().getId()).getGameMode() == GameType.CREATIVE;
-				}
-				return false;
-			}
-		}.checkGamemode(entity))) {
+ 			public boolean checkGamemode(Entity _ent) {
+ 				if (_ent instanceof ServerPlayer _serverPlayer) {
+ 					return _serverPlayer.gameMode.getGameModeForPlayer() == GameType.CREATIVE;
+ 				}
+ 				return false;
+ 			}
+ 		}.checkGamemode(entity))) {
 			if (entity instanceof Player _player) {
 				ItemStack _stktoremove = new ItemStack(InvincibleConquestModItems.SELECTION_BOOK.get());
 				_player.getInventory().clearOrCountMatchingItems(p -> _stktoremove.getItem() == p.getItem(), 1, _player.inventoryMenu.getCraftSlots());

@@ -1,35 +1,39 @@
 package net.clozynoii.invincibleconquest.procedures;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.player.Player;
 
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
-
-import com.mojang.blaze3d.platform.InputConstants;
 
 public class FlightMovementCheckProcedure {
 	public static void execute(Entity entity) {
 		if (entity == null)
 			return;
-		if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), InputConstants.KEY_W)) {
+		double forward = 0;
+		double strafe = 0;
+		if (entity instanceof Player _player) {
+			forward = _player.zza;
+			strafe = _player.xxa;
+		}
+		if (Math.abs(forward) >= Math.abs(strafe) && forward > 0) {
 			{
 				InvincibleConquestModVariables.PlayerVariables _vars = entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES);
 				_vars.FlightDirection = "Forward";
 				_vars.syncPlayerVariables(entity);
 			}
-		} else if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), InputConstants.KEY_S)) {
+		} else if (Math.abs(forward) >= Math.abs(strafe) && forward < 0) {
 			{
 				InvincibleConquestModVariables.PlayerVariables _vars = entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES);
 				_vars.FlightDirection = "Backward";
 				_vars.syncPlayerVariables(entity);
 			}
-		} else if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), InputConstants.KEY_A)) {
+		} else if (Math.abs(strafe) > Math.abs(forward) && strafe < 0) {
 			{
 				InvincibleConquestModVariables.PlayerVariables _vars = entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES);
 				_vars.FlightDirection = "Left";
 				_vars.syncPlayerVariables(entity);
 			}
-		} else if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), InputConstants.KEY_D)) {
+		} else if (Math.abs(strafe) > Math.abs(forward) && strafe > 0) {
 			{
 				InvincibleConquestModVariables.PlayerVariables _vars = entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES);
 				_vars.FlightDirection = "Right";

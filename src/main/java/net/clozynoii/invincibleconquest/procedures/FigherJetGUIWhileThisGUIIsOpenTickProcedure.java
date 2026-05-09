@@ -1,9 +1,6 @@
 package net.clozynoii.invincibleconquest.procedures;
 
-import org.checkerframework.checker.units.qual.s;
-
 import net.minecraft.world.entity.Entity;
-import net.minecraft.client.gui.components.EditBox;
 
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 
@@ -23,7 +20,7 @@ public class FigherJetGUIWhileThisGUIIsOpenTickProcedure {
 					}
 					return 0;
 				}
-			}.convert(guistate.containsKey("text:XValue") ? ((EditBox) guistate.get("text:XValue")).getValue() : "") + new Object() {
+			}.convert(getText(guistate, "text:XValue")) + new Object() {
 				double convert(String s) {
 					try {
 						return Double.parseDouble(s.trim());
@@ -31,8 +28,22 @@ public class FigherJetGUIWhileThisGUIIsOpenTickProcedure {
 					}
 					return 0;
 				}
-			}.convert(guistate.containsKey("text:ZValue") ? ((EditBox) guistate.get("text:ZValue")).getValue() : "")) - (entity.getX() + entity.getZ());
+			}.convert(getText(guistate, "text:ZValue"))) - (entity.getX() + entity.getZ());
 			_vars.syncPlayerVariables(entity);
+		}
+	}
+
+	private static String getText(HashMap guistate, String key) {
+		Object value = guistate.get(key);
+		if (value == null) {
+			return "";
+		}
+		try {
+			java.lang.reflect.Method method = value.getClass().getMethod("getValue");
+			Object result = method.invoke(value);
+			return result != null ? result.toString() : "";
+		} catch (Exception e) {
+			return value.toString();
 		}
 	}
 }
