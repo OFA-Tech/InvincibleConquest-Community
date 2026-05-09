@@ -118,7 +118,8 @@ public class AbilitySelectionHelper {
 		}
 		if (!isPowerAvailable(ability))
 			return false;
-		String resolvedAbility = getAvailablePowers().stream().filter(power -> power.equalsIgnoreCase(ability)).findFirst().orElse(ability);
+		String requestedAbility = ability;
+		String resolvedAbility = getAvailablePowers().stream().filter(power -> power.equalsIgnoreCase(requestedAbility)).findFirst().orElse(requestedAbility);
 		InvincibleConquestModVariables.PlayerVariables vars = player.getData(InvincibleConquestModVariables.PLAYER_VARIABLES);
 		vars.PlayerAbility = resolvedAbility;
 		vars.syncPlayerVariables(player);
