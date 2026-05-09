@@ -1,6 +1,7 @@
 package net.clozynoii.invincibleconquest.command;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
@@ -59,7 +60,7 @@ public class InvincibleConquestPowerCommand {
 								}))))));
 	}
 
-	private static CompletableFuture<Suggestions> suggestPowers(CommandSourceStack source, SuggestionsBuilder builder) {
+	private static CompletableFuture<Suggestions> suggestPowers(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
 		List<String> suggestions = new ArrayList<>(AbilitySelectionHelper.getCommandPowerIds());
 		suggestions.add("random");
 		return SharedSuggestionProvider.suggest(suggestions, builder);
