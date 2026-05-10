@@ -3,7 +3,7 @@ plugins {
     id 'net.neoforged.moddev' version '1.0.21'
 }
 
-version = '5.0.2'
+version = '5.0.3'
 base.archivesName = "invincible-conquest_community"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)

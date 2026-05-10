@@ -11,8 +11,8 @@ public class UseAbilitySlot3bProcedure {
 	public static void execute(LevelAccessor world, double x, double y, double z, Entity entity) {
 		if (entity == null)
 			return;
-		if (entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).Cooldown3b == 0) {
-			if (entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).KeyHeld == false && entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).InputDelay == 0) {
+		if (entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).Cooldown3b <= 0) {
+			if (entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).KeyHeld == false && entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).InputDelay <= 0) {
 				if ((entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).Ability3b).equals("Heavy Attack")) {
 					AbilityHeavyAttackProcedure.execute(world, x, y, z, entity);
 				}

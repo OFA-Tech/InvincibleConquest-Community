@@ -2,6 +2,7 @@ package net.clozynoii.invincibleconquest.command;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
@@ -16,6 +17,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
+import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 import net.clozynoii.invincibleconquest.procedures.AbilitySelectionHelper;
 
 import java.util.ArrayList;
@@ -36,7 +38,8 @@ public class InvincibleConquestPowerCommand {
 													int changed = 0;
 													for (ServerPlayer target : EntityArgument.getPlayers(ctx, "target")) {
 														boolean success = "random".equalsIgnoreCase(input) ? AbilitySelectionHelper.assignRandomPower(target, target.getRandom()) : AbilitySelectionHelper.assignAbility(target, input);
-														if (success) changed++;
+														if (success)
+															changed++;
 													}
 													if (changed == 0) {
 														ctx.getSource().sendFailure(Component.literal("Invalid/disabled/WIP power: " + input));
@@ -48,14 +51,30 @@ public class InvincibleConquestPowerCommand {
 												}))))
 								.then(Commands.literal("clear").then(Commands.argument("target", EntityArgument.players()).executes(ctx -> {
 									int changed = (int) EntityArgument.getPlayers(ctx, "target").stream().filter(target -> AbilitySelectionHelper.assignAbility(target, "Human")).count();
-                                    ctx.getSource().sendSuccess(() -> Component.literal("Cleared power for " + changed + " player(s)."), true);
+									ctx.getSource().sendSuccess(() -> Component.literal("Cleared power for " + changed + " player(s)."), true);
 									return changed;
 								})))
 								.then(Commands.literal("list").executes(ctx -> {
 									List<String> ids = new ArrayList<>(AbilitySelectionHelper.getCommandPowerIds());
 									ctx.getSource().sendSuccess(() -> Component.literal("Available powers: " + String.join(", ", ids)), false);
 									return ids.size();
-								})))));
+								})))
+						.then(Commands.literal("cooldown")
+								.then(Commands.literal("reset").then(Commands.argument("target", EntityArgument.players()).executes(ctx -> resetCooldowns(ctx, "target"))))
+								.then(Commands.literal("clear").then(Commands.argument("target", EntityArgument.players()).executes(ctx -> resetCooldowns(ctx, "target")))))));
+	}
+
+	private static int resetCooldowns(CommandContext<CommandSourceStack> ctx, String targetArg) throws CommandSyntaxException {
+		int affected = 0;
+		for (ServerPlayer target : EntityArgument.getPlayers(ctx, targetArg)) {
+			InvincibleConquestModVariables.PlayerVariables vars = target.getData(InvincibleConquestModVariables.PLAYER_VARIABLES);
+			vars.resetAbilityCooldowns();
+			vars.syncPlayerVariables(target);
+			affected++;
+		}
+		int finalAffected = affected;
+		ctx.getSource().sendSuccess(() -> Component.literal("Reset ability cooldowns for " + finalAffected + " player(s)."), true);
+		return affected;
 	}
 
 	private static CompletableFuture<Suggestions> suggestPowers(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
