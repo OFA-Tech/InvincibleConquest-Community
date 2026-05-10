@@ -12,8 +12,6 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nullable;
-
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
@@ -65,14 +63,9 @@ public final class ClientAnimationHandler {
 			}
 
 			if (animation != null && (override || !animation.isActive())) {
-				var key = ResourceLocation.fromNamespaceAndPath("invincible_conquest", anim);
-				var registered = PlayerAnimationRegistry.getAnimation(key);
-				if (registered == null) {
-					return;
-				}
 				animation.replaceAnimationWithFade(
 						AbstractFadeModifier.functionalFadeIn(5, (modelName, type, value) -> value),
-						registered.playAnimation()
+						PlayerAnimationRegistry.getAnimation(ResourceLocation.fromNamespaceAndPath("invincible_conquest", anim)).playAnimation()
 								.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL)
 								.setFirstPersonConfiguration(new FirstPersonConfiguration().setShowRightArm(true).setShowLeftItem(false))
 				);

@@ -67,7 +67,7 @@ public class InvincibleConquestModGameRules {
 		VILTRUMITE_MAX_AGE_BONUS = GameRules.register("viltrumiteMaxAgeBonus", GameRules.Category.PLAYER, GameRules.IntegerValue.create(100));
 		SERVER_REP_LEVELING = GameRules.register("serverRepLeveling", GameRules.Category.PLAYER, GameRules.BooleanValue.create(false));
 		CANNIBALISM = GameRules.register("cannibalism", GameRules.Category.PLAYER, GameRules.BooleanValue.create(true));
-		INVINCIBLE_CONQUEST_RANDOM_SELECTION = GameRules.register("invincibleConquestRandomSelection", GameRules.Category.PLAYER, GameRules.BooleanValue.create(false));
+		INVINCIBLE_CONQUEST_RANDOM_SELECTION = GameRules.register("invincibleConquestRandomSelection", GameRules.Category.PLAYER, GameRules.BooleanValue.create(true));
 		INVINCIBLE_CONQUEST_FORCE_RANDOM_SELECTION = GameRules.register("invincibleConquestForceRandomSelection", GameRules.Category.PLAYER, GameRules.BooleanValue.create(false));
 	}
 }
