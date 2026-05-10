@@ -42,22 +42,20 @@ public class InvincibleConquestPowerCommand {
 														ctx.getSource().sendFailure(Component.literal("Invalid/disabled/WIP power: " + input));
 														return 0;
 													}
-													ctx.getSource().sendSuccess(() -> Component.literal("Updated power for " + changed + " player(s)."), true);
+													int finalChanged = changed;
+													ctx.getSource().sendSuccess(() -> Component.literal("Updated power for " + finalChanged + " player(s)."), true);
 													return changed;
 												}))))
 								.then(Commands.literal("clear").then(Commands.argument("target", EntityArgument.players()).executes(ctx -> {
-									int changed = 0;
-									for (ServerPlayer target : EntityArgument.getPlayers(ctx, "target")) {
-										if (AbilitySelectionHelper.assignAbility(target, "Human")) changed++;
-									}
-									ctx.getSource().sendSuccess(() -> Component.literal("Cleared power for " + changed + " player(s)."), true);
+									int changed = (int) EntityArgument.getPlayers(ctx, "target").stream().filter(target -> AbilitySelectionHelper.assignAbility(target, "Human")).count();
+                                    ctx.getSource().sendSuccess(() -> Component.literal("Cleared power for " + changed + " player(s)."), true);
 									return changed;
 								})))
 								.then(Commands.literal("list").executes(ctx -> {
 									List<String> ids = new ArrayList<>(AbilitySelectionHelper.getCommandPowerIds());
 									ctx.getSource().sendSuccess(() -> Component.literal("Available powers: " + String.join(", ", ids)), false);
 									return ids.size();
-								}))))));
+								})))));
 	}
 
 	private static CompletableFuture<Suggestions> suggestPowers(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {

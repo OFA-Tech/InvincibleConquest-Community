@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class AbilitySelectionHelper {
 	private static final List<String> MENU_ABILITIES = Arrays.asList("Human", "Viltrumite", "Speedster", "Spider", "Cloning", "Explode", "Portal", "Battle Beast", "Atom", "Robot", "Tech Jacket");
-	private static final Set<String> DISABLED_ABILITY_IDS = Set.of("speedster", "cloning", "atom", "robot");
+	private static final Set<String> DISABLED_ABILITY_IDS = Set.of("speedster", "Spider", "cloning", "atom", "robot");
 	private static final Map<String, String> COMMAND_POWER_ALIASES = createCommandAliases();
 
 	private static Map<String, String> createCommandAliases() {
@@ -26,9 +26,6 @@ public class AbilitySelectionHelper {
 		for (String ability : MENU_ABILITIES) {
 			aliases.put(toCommandId(ability), ability);
 		}
-		aliases.put("beast", "Battle Beast");
-		aliases.put("battlebeast", "Battle Beast");
-		aliases.put("theimmortal", "The Immortal");
 		return aliases;
 	}
 

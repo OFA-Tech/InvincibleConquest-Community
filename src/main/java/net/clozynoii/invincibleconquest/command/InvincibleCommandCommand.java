@@ -113,6 +113,6 @@ public class InvincibleCommandCommand {
 
 					CMDRegenerateSpaceProcedure.execute(world, entity);
 					return 0;
-				})))));
+				}))));
 	}
 }
