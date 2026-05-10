@@ -1,4 +1,7 @@
 {
+  "invincible_conquest.configuration.random_power": "Random Power",
+  "invincible_conquest.configuration.random_power.enable_random_selection": "Enable Random Power Selection",
+  "invincible_conquest.configuration.random_power.force_random_selection": "Force Random Power Selection",
   "gui.invincible_conquest.menu_ability_viltrumite.tooltip_slot_5": "Slot 5",
   "entity.invincible_conquest.orange_sun": "Sun",
   "gui.invincible_conquest.menu_ability_viltrumite.tooltip_slot_4": "Slot 4",
