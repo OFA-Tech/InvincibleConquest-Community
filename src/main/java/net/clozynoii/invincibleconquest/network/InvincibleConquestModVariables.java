@@ -478,6 +478,33 @@ public class InvincibleConquestModVariables {
 		public String HeroSlot4 = "";
 		public String HeroSlot5 = "";
 
+
+		public void tickAbilityCooldowns() {
+			Cooldown1a = Math.max(0, Cooldown1a - 1);
+			Cooldown2a = Math.max(0, Cooldown2a - 1);
+			Cooldown3a = Math.max(0, Cooldown3a - 1);
+			Cooldown4a = Math.max(0, Cooldown4a - 1);
+			Cooldown5a = Math.max(0, Cooldown5a - 1);
+			Cooldown1b = Math.max(0, Cooldown1b - 1);
+			Cooldown2b = Math.max(0, Cooldown2b - 1);
+			Cooldown3b = Math.max(0, Cooldown3b - 1);
+			Cooldown4b = Math.max(0, Cooldown4b - 1);
+			Cooldown5b = Math.max(0, Cooldown5b - 1);
+		}
+
+		public void resetAbilityCooldowns() {
+			Cooldown1a = 0;
+			Cooldown2a = 0;
+			Cooldown3a = 0;
+			Cooldown4a = 0;
+			Cooldown5a = 0;
+			Cooldown1b = 0;
+			Cooldown2b = 0;
+			Cooldown3b = 0;
+			Cooldown4b = 0;
+			Cooldown5b = 0;
+		}
+
 		@Override
 		public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
 			CompoundTag nbt = new CompoundTag();
