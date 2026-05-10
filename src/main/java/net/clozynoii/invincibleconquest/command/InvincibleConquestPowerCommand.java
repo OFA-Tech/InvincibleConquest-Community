@@ -2,6 +2,7 @@ package net.clozynoii.invincibleconquest.command;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
@@ -63,7 +64,7 @@ public class InvincibleConquestPowerCommand {
 								.then(Commands.literal("clear").then(Commands.argument("target", EntityArgument.players()).executes(ctx -> resetCooldowns(ctx, "target")))))));
 	}
 
-	private static int resetCooldowns(CommandContext<CommandSourceStack> ctx, String targetArg) {
+	private static int resetCooldowns(CommandContext<CommandSourceStack> ctx, String targetArg) throws CommandSyntaxException {
 		int affected = 0;
 		for (ServerPlayer target : EntityArgument.getPlayers(ctx, targetArg)) {
 			InvincibleConquestModVariables.PlayerVariables vars = target.getData(InvincibleConquestModVariables.PLAYER_VARIABLES);
