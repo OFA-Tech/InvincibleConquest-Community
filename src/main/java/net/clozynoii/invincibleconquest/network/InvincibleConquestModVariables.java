@@ -30,7 +30,6 @@ import net.minecraft.core.HolderLookup;
 import net.clozynoii.invincibleconquest.InvincibleConquestMod;
 
 import java.util.function.Supplier;
-import java.util.ArrayList;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class InvincibleConquestModVariables {
@@ -678,11 +677,15 @@ public class InvincibleConquestModVariables {
 		}
 
 		public void syncPlayerVariables(Entity entity) {
-			if (!entity.level().isClientSide()) {
-				for (Entity entityiterator : new ArrayList<>(entity.level().players())) {
-					if (entityiterator instanceof ServerPlayer serverPlayer)
-						PacketDistributor.sendToPlayer(serverPlayer, new PlayerVariablesSyncMessage(this, entity.getId()));
-				}
+			if (entity == null || entity.level().isClientSide()) {
+				return;
+			}
+
+			if (entity instanceof ServerPlayer serverPlayer) {
+				PacketDistributor.sendToPlayer(
+						serverPlayer,
+						new PlayerVariablesSyncMessage(this, entity.getId())
+				);
 			}
 		}
 	}
@@ -694,9 +697,15 @@ public class InvincibleConquestModVariables {
 			buffer.writeInt(message.target()); // Write the entity ID to the buffer
 		}, (RegistryFriendlyByteBuf buffer) -> {
 			var nbt = buffer.readNbt();
-			PlayerVariablesSyncMessage message = new PlayerVariablesSyncMessage(new PlayerVariables(), buffer.readInt());
-			message.data.deserializeNBT(buffer.registryAccess(), nbt);
-			return message;
+			int target = buffer.readInt();
+
+			PlayerVariables data = new PlayerVariables();
+
+			if (nbt != null) {
+				data.deserializeNBT(buffer.registryAccess(), nbt);
+			}
+
+			return new PlayerVariablesSyncMessage(data, target);
 		});
 
 		@Override
@@ -706,11 +715,22 @@ public class InvincibleConquestModVariables {
 
 		public static void handleData(final PlayerVariablesSyncMessage message, final IPayloadContext context) {
 			if (context.flow() == PacketFlow.CLIENTBOUND && message.data != null) {
-				context.enqueueWork(() -> context.player().level().getEntity(message.target()).getData(PLAYER_VARIABLES).deserializeNBT(context.player().registryAccess(), message.data.serializeNBT(context.player().registryAccess())))
-						.exceptionally(e -> {
-							context.connection().disconnect(Component.literal(e.getMessage()));
-							return null;
-						});
+				context.enqueueWork(() -> {
+					Entity targetEntity = context.player().level().getEntity(message.target());
+
+					if (targetEntity == null) {
+						// Client does not know this entity yet. Ignore this sync packet.
+						return;
+					}
+
+					targetEntity.getData(PLAYER_VARIABLES).deserializeNBT(
+							context.player().registryAccess(),
+							message.data.serializeNBT(context.player().registryAccess())
+					);
+				}).exceptionally(e -> {
+					context.connection().disconnect(Component.literal(e.getMessage()));
+					return null;
+				});
 			}
 		}
 	}
