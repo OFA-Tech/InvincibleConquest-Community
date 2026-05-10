@@ -1,5 +1,6 @@
-package net.clozynoii.invincibleconquest.procedures;
+package net.clozynoii.invincibleconquest;
 
+import net.clozynoii.invincibleconquest.procedures.SetupAnimationsProcedure;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.player.Player;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;

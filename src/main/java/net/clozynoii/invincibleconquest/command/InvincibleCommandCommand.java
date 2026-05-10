@@ -28,7 +28,7 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 public class InvincibleCommandCommand {
 	@SubscribeEvent
 	public static void registerCommand(RegisterCommandsEvent event) {
-		event.getDispatcher().register(Commands.literal("InvincibleAdmin").requires(s -> s.hasPermission(2))
+		event.getDispatcher().register(Commands.literal("invincibleconquest").then(Commands.literal("admin").requires(s -> s.hasPermission(2))
 				.then(Commands.literal("stat").then(Commands.literal("level").then(Commands.argument("name", EntityArgument.player()).then(Commands.argument("amount", DoubleArgumentType.doubleArg()).executes(arguments -> {
 					Level world = arguments.getSource().getUnsidedLevel();
 					double x = arguments.getSource().getPosition().x();
@@ -113,6 +113,6 @@ public class InvincibleCommandCommand {
 
 					CMDRegenerateSpaceProcedure.execute(world, entity);
 					return 0;
-				})));
+				}))));
 	}
 }

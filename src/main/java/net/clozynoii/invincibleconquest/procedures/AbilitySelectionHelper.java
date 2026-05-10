@@ -10,13 +10,29 @@ import net.clozynoii.invincibleconquest.init.InvincibleConquestModGameRules;
 import net.clozynoii.invincibleconquest.network.InvincibleConquestModVariables;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 public class AbilitySelectionHelper {
-	private static final List<String> MENU_ABILITIES = Arrays.asList("Human", "Viltrumite", "Speedster", "Spider", "Cloning", "Explode", "Portal", "Battle Beast", "Atom Eve", "Robot", "Tech Jacket");
-	private static final Set<String> DISABLED_ABILITIES = new HashSet<>(Arrays.asList("Portal"));
+	private static final List<String> MENU_ABILITIES = Arrays.asList("Human", "Viltrumite", "Speedster", "Spider", "Cloning", "Explode", "Portal", "Battle Beast", "Atom", "Robot", "Tech Jacket");
+	private static final Set<String> DISABLED_ABILITY_IDS = Set.of("speedster", "Spider", "cloning", "atom", "robot");
+	private static final Map<String, String> COMMAND_POWER_ALIASES = createCommandAliases();
+
+	private static Map<String, String> createCommandAliases() {
+		Map<String, String> aliases = new LinkedHashMap<>();
+		for (String ability : MENU_ABILITIES) {
+			aliases.put(toCommandId(ability), ability);
+		}
+		return aliases;
+	}
+
+	public static String toCommandId(String ability) {
+		if (ability == null) return "";
+		return ability.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "");
+	}
 
 	public static boolean isRandomSelectionAllowed(Entity entity) {
 		if (entity == null || entity.level().isClientSide())
@@ -34,19 +50,43 @@ public class AbilitySelectionHelper {
 		return configForced || gameruleForced;
 	}
 
-	public static boolean isSelectableForRandom(String ability) {
-		return ability != null && !ability.isBlank() && MENU_ABILITIES.contains(ability) && !DISABLED_ABILITIES.contains(ability);
+	public static boolean isPowerAvailable(String ability) {
+		return resolvePowerIdOrAlias(ability) != null;
+	}
+
+	public static List<String> getAvailablePowers() {
+		return MENU_ABILITIES.stream().filter(ability -> !DISABLED_ABILITY_IDS.contains(toCommandId(ability))).toList();
 	}
 
 	public static List<String> getRandomSelectablePowers() {
-		return MENU_ABILITIES.stream().filter(AbilitySelectionHelper::isSelectableForRandom).toList();
+		return getAvailablePowers();
+	}
+
+	public static String resolvePowerIdOrAlias(String ability) {
+		if (ability == null || ability.isBlank()) return null;
+		String requestedAbility = ability.trim();
+		String aliasResolved = COMMAND_POWER_ALIASES.get(toCommandId(requestedAbility));
+		if (aliasResolved != null) {
+			requestedAbility = aliasResolved;
+		}
+		String requestedAbilityFinal = requestedAbility;
+		String resolvedAbility = getAvailablePowers().stream().filter(power -> power.equalsIgnoreCase(requestedAbilityFinal)).findFirst().orElse(null);
+		return resolvedAbility;
+	}
+
+	public static List<String> getCommandPowerIds() {
+		return getAvailablePowers().stream().map(AbilitySelectionHelper::toCommandId).distinct().toList();
 	}
 
 	public static boolean assignAbility(ServerPlayer player, String ability) {
-		if (player == null || !isSelectableForRandom(ability))
+		if (player == null)
+			return false;
+		String resolvedAbility = resolvePowerIdOrAlias(ability);
+		if (resolvedAbility == null)
 			return false;
 		InvincibleConquestModVariables.PlayerVariables vars = player.getData(InvincibleConquestModVariables.PLAYER_VARIABLES);
-		vars.PlayerAbility = ability;
+		if (resolvedAbility.equals(vars.PlayerAbility)) return true;
+		vars.PlayerAbility = resolvedAbility;
 		vars.syncPlayerVariables(player);
 		return true;
 	}
