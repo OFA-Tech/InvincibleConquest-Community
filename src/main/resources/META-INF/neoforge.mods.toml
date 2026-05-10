@@ -4,12 +4,13 @@ license="All Rights Reserved"
 
 [[mods]]
 modId="invincible_conquest"
-version="5.0.0"
-displayName="Invincible: Conquest"
+version="5.0.0-community"
+displayName="Invincible: Conquest [ COMMUNITY EDITION ]"
 displayURL="https://discord.gg/TJj3Sk52Jq"
 credits="sushiclozy, NoiiLive"
 authors="sushiclozy, NoiiLive"
 description="Adds Invincible into Minecraft"
+logoFile="logo.png"
 
 # Start of user code block mod configuration
 # End of user code block mod configuration
