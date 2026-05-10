@@ -93,7 +93,11 @@ public class PlayerFlyingTickProcedure {
 							}
 						}
 					} else {
-						creativeFlight = true;
+						boolean modFlightActive = isModFlightAbility(entity) && !(entity instanceof Player spectator && spectator.isSpectator());
+						creativeFlight = !modFlightActive;
+						if (modFlightActive && entity instanceof Player player && !player.isFallFlying()) {
+							player.startFallFlying();
+						}
 						if (entity.isShiftKeyDown()) {
 										if ((entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("Portal")) {
 											if (!world.isClientSide()) {
@@ -134,7 +138,7 @@ public class PlayerFlyingTickProcedure {
 							} else if ((entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("Tech Jacket")) {
 											if (!world.isClientSide()) {
 												if (entity instanceof Player)
-													PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage("fly_idle", entity.getId(), true));
+													PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage(getNormalFlightAnimation(entity), entity.getId(), true));
 											}
 								world.addParticle(ParticleTypes.POOF, x, y, z, 0, (-0.2), 0);
 								world.addParticle(ParticleTypes.FLAME, x, y, z, 0, (-0.1), 0);
@@ -146,7 +150,7 @@ public class PlayerFlyingTickProcedure {
 							} else if ((entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("Atom")) {
 											if (!world.isClientSide()) {
 												if (entity instanceof Player)
-													PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage("fly_idle", entity.getId(), true));
+													PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage(getNormalFlightAnimation(entity), entity.getId(), true));
 											}
 								if (world instanceof ServerLevel _level)
 									_level.getServer().getCommands().performPrefixedCommand(
