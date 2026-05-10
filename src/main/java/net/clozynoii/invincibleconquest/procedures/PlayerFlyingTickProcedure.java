@@ -53,7 +53,8 @@ public class PlayerFlyingTickProcedure {
 			if (entity instanceof Player) {
 				if (entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerFlying == true) {
 					if (entity.isSprinting()) {
-						if (isModFlightAbility(entity) && !(entity instanceof Player spectator && spectator.isSpectator())) {
+						if ((entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("Viltrumite") || (entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("Atom")
+								|| (entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("Tech Jacket")) {
 							creativeFlight = false;
 							if (entity instanceof Player _plr && !(_plr.isFallFlying())) {
 								_plr.startFallFlying();
@@ -93,11 +94,7 @@ public class PlayerFlyingTickProcedure {
 							}
 						}
 					} else {
-						boolean modFlightActive = isModFlightAbility(entity) && !(entity instanceof Player spectator && spectator.isSpectator());
-						creativeFlight = !modFlightActive;
-						if (modFlightActive && entity instanceof Player player && !player.isFallFlying()) {
-							player.startFallFlying();
-						}
+						creativeFlight = true;
 						if (entity.isShiftKeyDown()) {
 										if ((entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("Portal")) {
 											if (!world.isClientSide()) {
@@ -138,7 +135,7 @@ public class PlayerFlyingTickProcedure {
 							} else if ((entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("Tech Jacket")) {
 											if (!world.isClientSide()) {
 												if (entity instanceof Player)
-													PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage(getNormalFlightAnimation(entity), entity.getId(), true));
+													PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage("defaultflight", entity.getId(), true));
 											}
 								world.addParticle(ParticleTypes.POOF, x, y, z, 0, (-0.2), 0);
 								world.addParticle(ParticleTypes.FLAME, x, y, z, 0, (-0.1), 0);
@@ -150,7 +147,7 @@ public class PlayerFlyingTickProcedure {
 							} else if ((entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility).equals("Atom")) {
 											if (!world.isClientSide()) {
 												if (entity instanceof Player)
-													PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage(getNormalFlightAnimation(entity), entity.getId(), true));
+													PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage("defaultflight", entity.getId(), true));
 											}
 								if (world instanceof ServerLevel _level)
 									_level.getServer().getCommands().performPrefixedCommand(
@@ -161,11 +158,10 @@ public class PlayerFlyingTickProcedure {
 										_entity.removeEffect(InvincibleConquestModMobEffects.DESTRUCTIVE_FLIGHT);
 								}
 							} else {
-								String normalFlightAnimation = getNormalFlightAnimation(entity);
-								if (!world.isClientSide()) {
-									if (entity instanceof Player)
-										PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage(normalFlightAnimation, entity.getId(), true));
-								}
+											if (!world.isClientSide()) {
+												if (entity instanceof Player)
+													PacketDistributor.sendToPlayersInDimension((ServerLevel) entity.level(), new SetupAnimationsProcedure.InvincibleConquestModAnimationMessage("defaultflight", entity.getId(), true));
+											}
 								if (entity instanceof LivingEntity _livEnt34 && _livEnt34.hasEffect(InvincibleConquestModMobEffects.DESTRUCTIVE_FLIGHT)) {
 									if (entity instanceof LivingEntity _entity)
 										_entity.removeEffect(InvincibleConquestModMobEffects.DESTRUCTIVE_FLIGHT);
@@ -212,23 +208,5 @@ public class PlayerFlyingTickProcedure {
 				}
 			}
 		}
-	}
-
-	private static boolean isModFlightAbility(Entity entity) {
-		String ability = entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).PlayerAbility;
-		return ability.equals("Viltrumite") || ability.equals("Atom") || ability.equals("Tech Jacket") || ability.equals("Portal");
-	}
-
-	private static String getNormalFlightAnimation(Entity entity) {
-		String direction = entity.getData(InvincibleConquestModVariables.PLAYER_VARIABLES).FlightDirection;
-		if ("Forward".equals(direction))
-			return "fly_forward";
-		if ("Backward".equals(direction))
-			return "fly_back";
-		if ("Left".equals(direction))
-			return "fly_left";
-		if ("Right".equals(direction))
-			return "fly_right";
-		return "fly_idle";
 	}
 }
