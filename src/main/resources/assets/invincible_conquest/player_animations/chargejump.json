@@ -1,0 +1,21 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "chargejump": {
+      "loop": true,
+      "animation_length": 0.0833,
+      "bones": {
+        "right_arm": {
+          "rotation": {
+            "vector": [-120, -10, 0]
+          }
+        },
+        "left_arm": {
+          "rotation": {
+            "vector": [-120, 10, 0]
+          }
+        }
+      }
+    }
+  }
+}

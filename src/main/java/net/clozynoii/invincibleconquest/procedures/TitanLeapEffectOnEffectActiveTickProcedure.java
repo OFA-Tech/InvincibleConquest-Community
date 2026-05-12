@@ -17,7 +17,7 @@ public class TitanLeapEffectOnEffectActiveTickProcedure {
 		if (entity == null)
 			return;
 		if (world.isClientSide()) {
-			SetupAnimationsProcedure.setAnimationClientside((Player) entity, "chargejump", true);
+			SetupAnimationsProcedure.setAnimationClientside((Player) entity, "chargejump", true, "titan_leap_effect_tick");
 		}
 		if (!world.isClientSide()) {
 			if (entity instanceof Player)

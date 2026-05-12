@@ -81,6 +81,16 @@ public class SetupAnimationsProcedure {
     }
   }
 
+
+
+  public static void setAnimationClientside(Player player, String anim, boolean override, String context) {
+    if (player == null) {
+      return;
+    }
+    if (FMLEnvironment.dist == Dist.CLIENT) {
+      ClientAnimationHandler.setAnimationClientside(player, anim, override, context);
+    }
+  }
   public static void stopAnimationClientside(Player player) {
     if (player == null) {
       return;
