@@ -22,14 +22,14 @@ public class AbilitySelectionHelper {
 	private static final List<AbilityDefinition> ABILITY_DEFINITIONS = Arrays.asList(
 			new AbilityDefinition("Human", List.of("human", "none", "clear"), false, true),
 			new AbilityDefinition("Viltrumite", List.of("viltrumite", "viltrum"), false, true),
-			new AbilityDefinition("Speedster", List.of("speedster"), true, true),
-			new AbilityDefinition("Spider", List.of("spider"), true, true),
-			new AbilityDefinition("Cloning", List.of("cloning", "clone"), true, true),
+			new AbilityDefinition("Speedster", List.of("speedster"), true, false),
+			new AbilityDefinition("Spider", List.of("spider"), true, false),
+			new AbilityDefinition("Cloning", List.of("cloning", "clone"), true, false),
 			new AbilityDefinition("Explode", List.of("explode"), false, true),
 			new AbilityDefinition("Portal", List.of("portal"), false, true),
 			new AbilityDefinition("Beast", List.of("beast", "battlebeast"), false, true),
-			new AbilityDefinition("Atom", List.of("atom", "atomeve"), true, true),
-			new AbilityDefinition("Robot", List.of("robot"), true, true),
+			new AbilityDefinition("Atom", List.of("atom", "atomeve"), false, true),
+			new AbilityDefinition("Robot", List.of("robot"), true, false),
 			new AbilityDefinition("Tech Jacket", List.of("techjacket", "tech_jacket"), false, true));
 	private static final Map<String, AbilityDefinition> COMMAND_POWER_ALIASES = createCommandAliases();
 
