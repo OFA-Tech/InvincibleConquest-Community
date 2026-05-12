@@ -42,7 +42,7 @@ public class InvincibleConquestPowerCommand {
 															changed++;
 													}
 													if (changed == 0) {
-														ctx.getSource().sendFailure(Component.literal("Invalid/disabled/WIP power: " + input));
+														ctx.getSource().sendFailure(Component.literal("Power is invalid or marked work-in-progress: " + input));
 														return 0;
 													}
 													int finalChanged = changed;

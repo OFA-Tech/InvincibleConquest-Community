@@ -17,17 +17,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.core.BlockPos;
 
 import net.clozynoii.invincibleconquest.world.inventory.MenuAbilitySelectionMenu;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilityViltrumiteProcedure;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilityTechJacketProcedure;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilitySpiderProcedure;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilitySpeedsterProcedure;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilityRobotProcedure;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilityPortalProcedure;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilityHumanProcedure;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilityExplodeProcedure;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilityCloningProcedure;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilityBeastProcedure;
-import net.clozynoii.invincibleconquest.procedures.SelectAbilityAtomProcedure;
 import net.clozynoii.invincibleconquest.InvincibleConquestMod;
 import net.clozynoii.invincibleconquest.procedures.AbilitySelectionHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -71,58 +60,33 @@ public record MenuAbilitySelectionButtonMessage(int buttonID, int x, int y, int 
 		// security measure to prevent arbitrary chunk generation
 		if (!world.hasChunkAt(new BlockPos(x, y, z)))
 			return;
-		if (entity instanceof ServerPlayer serverPlayer && buttonID == 0) {
+		if (!(entity instanceof ServerPlayer serverPlayer)) {
+			return;
+		}
+		if (buttonID == 0) {
 			if (!AbilitySelectionHelper.isRandomSelectionAllowed(entity)) {
 				serverPlayer.displayClientMessage(Component.literal("Random selection is disabled."), false);
 				return;
 			}
-			if (!AbilitySelectionHelper.assignRandomPower(serverPlayer, serverPlayer.getRandom())) {
-				return;
-			}
+			AbilitySelectionHelper.assignRandomPower(serverPlayer, serverPlayer.getRandom());
+			return;
 		}
-		if (buttonID == 1) {
-
-			SelectAbilityHumanProcedure.execute(world, x, y, z, entity);
-		}
-		if (buttonID == 2) {
-
-			SelectAbilityViltrumiteProcedure.execute(world, x, y, z, entity);
-		}
-		if (buttonID == 3) {
-
-			SelectAbilitySpeedsterProcedure.execute(entity);
-		}
-		if (buttonID == 4) {
-
-			SelectAbilitySpiderProcedure.execute(entity);
-		}
-		if (buttonID == 5) {
-
-			SelectAbilityCloningProcedure.execute(entity);
-		}
-		if (buttonID == 6) {
-
-			SelectAbilityExplodeProcedure.execute(entity);
-		}
-		if (buttonID == 7) {
-
-			SelectAbilityPortalProcedure.execute(entity);
-		}
-		if (buttonID == 8) {
-
-			SelectAbilityBeastProcedure.execute(entity);
-		}
-		if (buttonID == 9) {
-
-			SelectAbilityAtomProcedure.execute(entity);
-		}
-		if (buttonID == 10) {
-
-			SelectAbilityRobotProcedure.execute(entity);
-		}
-		if (buttonID == 11) {
-
-			SelectAbilityTechJacketProcedure.execute(entity);
+		String requestedPower = switch (buttonID) {
+			case 1 -> "Human";
+			case 2 -> "Viltrumite";
+			case 3 -> "Speedster";
+			case 4 -> "Spider";
+			case 5 -> "Cloning";
+			case 6 -> "Explode";
+			case 7 -> "Portal";
+			case 8 -> "Beast";
+			case 9 -> "Atom";
+			case 10 -> "Robot";
+			case 11 -> "Tech Jacket";
+			default -> null;
+		};
+		if (requestedPower != null && !AbilitySelectionHelper.assignAbility(serverPlayer, requestedPower, x, y, z)) {
+			serverPlayer.displayClientMessage(Component.literal("That power is unavailable."), false);
 		}
 	}
 
